@@ -39,23 +39,20 @@ class DataSet:
             \n{X_train.min()=}, {X_train.max()=}, \
             \n{X_test.min()=}, {X_test.max()=}")
         logger.debug(f"Labels befor preprocessing: \
-            \n{y_train.min()=}, {y_test.max()=}")
+            \n{y_train.min()=}, {y_train.max()=}")
 
         X_train, X_test = [
             cls._images_preprocess(X, 28, 28, 1, 255)
             for X in [X_train, X_test]
         ]
-        y_train, y_test = [
-            cls._labels_preprocess(y, 10)
-            for y in [y_train, y_test]
-        ]
+        y_train = cls._labels_preprocess(y_train, 10)
 
         logger.debug(f"Images after preprocessing: \
             \n{X_train.shape=}, {X_test.shape=} \
             \n{X_train.min()=}, {X_train.max()=}, \
             \n{X_test.min()=}, {X_test.max()=}")
         logger.debug(f"Labels after preprocessing: \
-            \n{y_train.min()=}, {y_test.max()=}")
+            \n{y_train.min()=}, {y_train.max()=}")
 
         return cls(
             X_train=X_train,
