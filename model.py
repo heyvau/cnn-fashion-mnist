@@ -1,5 +1,6 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import numpy as np
 import matplotlib.pyplot as plt
 import logging
@@ -8,7 +9,7 @@ logger = logging.getLogger()
 
 class ModelCNN:
     def __init__(self, model: Sequential) -> None:
-        self.model = model
+        self._model = model
 
     @classmethod
     def create_from_config(cls, config: dict):
@@ -64,12 +65,13 @@ class ModelCNN:
         return model        
 
     def train(
-        self, train_images: np.ndarray, train_labels: np.ndarray,
+        self,
+        train_images: np.ndarray, train_labels: np.ndarray,
         batch_size: int, n_epochs: int) -> dict:
         """
         Method fits the model with train data and returns training history.
         """
-        history = self.model.fit(
+        history = self._model.fit(
             train_images, train_labels,
             epochs=n_epochs, batch_size=batch_size, validation_split=0.1
         ).history
@@ -90,11 +92,33 @@ class ModelCNN:
         plt.ylabel("Accuracy")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.savefig("./plots/accuracy.jpg")
 
     def predict(self, test_images: np.ndarray) -> list:
         """
         Method returs list of predicted lables for test images.
         """
-        predictions = self.model.predict(test_images)
+        predictions = self._model.predict(test_images)
         return np.argmax(predictions, axis=1)
+
+    def plot_conf_matrix(
+        self,
+        test_images: np.ndarray, test_labels: np.ndarray,
+        dataset_labels: tuple) -> None:
+        """
+        Method for plotting confusion matrix based on test labels and predictions.
+        """
+        predictions = self.predict(test_images)
+
+        logger.debug(f"{predictions.min()=}, {predictions.max()=}")
+        logger.debug(f"{test_labels.shape=}, {predictions.shape=}")
+
+        cm = confusion_matrix(test_labels, predictions)
+        print(cm)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=dataset_labels)
+        disp.plot(cmap='Blues', values_format='d')
+        plt.title('Confusion Matrix')
+        plt.savefig("./plots/conf_matrix.jpg")
+
+    def save(self, filename: str) -> None:
+        self._model.save("./models/" + filename)

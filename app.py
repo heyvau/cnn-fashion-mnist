@@ -1,4 +1,5 @@
 from dataset import DataSet
+from keras import models 
 from model import ModelCNN
 import os
 import json
@@ -25,7 +26,16 @@ def app(config_file: str):
         train_labels=fashion_mnist.y_train,
         batch_size=32, n_epochs=30
     )
-    model.plot_accuracy(history)
+
+    model.save("cnn_v1.keras")
+
+    model.plot_accuracy(history=history)
+
+    model.plot_conf_matrix(
+        test_images=fashion_mnist.X_test,
+        test_labels=fashion_mnist.y_test,
+        dataset_labels=fashion_mnist.labels
+    )
 
 
 if __name__ == "__main__":

@@ -10,29 +10,16 @@ logger = logging.getLogger()
 class DataSet:
     def __init__(
         self, X_train: np.ndarray, y_train: np.ndarray,
-              X_test: np.ndarray, y_test: np.ndarray) -> None:
+              X_test: np.ndarray, y_test: np.ndarray,
+              labels: tuple) -> None:
 
-        self._X_train = X_train
-        self._y_train = y_train
+        self.X_train = X_train
+        self.y_train = y_train
 
-        self._X_test = X_test
-        self._y_test = y_test
+        self.X_test = X_test
+        self.y_test = y_test
 
-    @property
-    def X_train(self) -> np.ndarray:
-        return self._X_train
-
-    @property
-    def y_train(self) -> np.ndarray:
-        return self._y_train
-
-    @property
-    def X_test(self) -> np.ndarray:
-        return self._X_test
-
-    @property
-    def y_test(self) -> np.ndarray:
-        return self._y_test
+        self.labels = labels
 
     @classmethod
     def from_fashion_mnist(cls) -> DataSet:
@@ -74,7 +61,12 @@ class DataSet:
             X_train=X_train,
             y_train=y_train,
             X_test=X_test,
-            y_test=y_test
+            y_test=y_test,
+            labels=(
+                "T-shirt/top", "Trouser", "Pullover",
+                "Dress", "Coat", "Sandal", "Shirt",
+                "Sneaker", "Bag", "Ankle boot"
+            )
         )
 
     @classmethod
