@@ -1,5 +1,4 @@
 from dataset import DataSet
-from keras import models 
 from model import ModelCNN
 import os
 import json
