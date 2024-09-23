@@ -114,7 +114,6 @@ class ModelCNN:
         logger.debug(f"{test_labels.shape=}, {predictions.shape=}")
 
         cm = confusion_matrix(test_labels, predictions)
-        print(cm)
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=dataset_labels)
         disp.plot(cmap='Blues', values_format='d')
         plt.title('Confusion Matrix')
